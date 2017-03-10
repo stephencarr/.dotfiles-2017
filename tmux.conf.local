@@ -1,0 +1,133 @@
+# https://bitbucket.org/sjl/dotfiles/raw/ea3fd4a6795ae2c5b27006f03201805a2454158e/tmux/tmux.conf
+
+# Use something easier to type as the prefix.
+set -g prefix C-s
+unbind C-b
+bind C-s send-prefix
+
+# Relax!
+set -sg escape-time 0
+set -sg repeat-time 600
+
+# Shut up.
+set -g quiet on
+
+# This is hilariously absurd.  How many nerds use tmux on OS X every day and
+# it's still fundamentally broken?
+set -g default-command "reattach-to-user-namespace -l zsh"
+# set -g default-command "reattach-to-user-namespace -l fish"
+
+# Less stretching to get to the first item.
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Reload the config.
+bind r source-file ~/.tmux.conf \; display "Reloaded ~/.tmux.conf"
+
+# Restore "open new pane/window in current directory" functionality in pre 1.9
+bind c new-window -c "#{pane_current_path}"
+
+# Use v and s to split the window up
+bind-key v split-window -h -c "#{pane_current_path}"
+bind-key s split-window -v -c "#{pane_current_path}"
+bind S choose-session
+
+# Sane scrolling
+set -g mouse on
+bind -n WheelUpPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M' 'copy-mode -e; send-keys -M'"
+
+# Pane movement
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# DVTM style pane selection
+bind 1 select-pane -t 1
+bind 2 select-pane -t 2
+bind 3 select-pane -t 3
+bind 4 select-pane -t 4
+bind 5 select-pane -t 5
+bind 6 select-pane -t 6
+bind 7 select-pane -t 7
+bind 8 select-pane -t 8
+bind 9 select-pane -t 9
+
+# Layouts
+set -g main-pane-width 260
+bind M select-layout main-vertical
+bind E select-layout even-horizontal
+
+# Pane resizing
+bind -r C-h resize-pane -L 5
+bind -r C-j resize-pane -D 5
+bind -r C-k resize-pane -U 5
+bind -r C-l resize-pane -R 5
+
+# Window movement
+# Only really makes sense if you have your parens bound to shifts like me.
+bind -r ( select-window -t :-
+bind -r ) select-window -t :+
+bind-key -r H swap-window -t -1
+bind-key -r L swap-window -t +1
+
+# 256 colors please
+set -g default-terminal "screen-256color"
+
+# Bad Wolf
+set -g status-fg white
+set -g status-bg colour234
+set -g window-status-activity-attr bold
+set -g pane-border-fg colour245
+set -g pane-active-border-fg colour39
+set -g message-fg colour16
+set -g message-bg colour221
+set -g message-attr bold
+
+# Custom status bar
+set -g status-position bottom
+set -g status-bg colour234
+set -g status-fg colour137
+set -g status-attr dim
+set -g status-left ''
+set -g status-right '#[fg=colour233,bg=colour241,bold] %d/%m #[fg=colour233,bg=colour245,bold] %H:%M:%S '
+set -g status-right-length 50
+set -g status-left-length 20
+
+setw -g window-status-current-fg colour81
+setw -g window-status-current-bg colour238
+setw -g window-status-current-attr bold
+setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F '
+
+setw -g window-status-fg colour138
+setw -g window-status-bg colour235
+setw -g window-status-attr none
+setw -g window-status-format ' #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F '
+
+setw -g window-status-bell-attr bold
+setw -g window-status-bell-fg colour255
+setw -g window-status-bell-bg colour1
+
+# Activity
+setw -g monitor-activity on
+set -g visual-activity off
+
+# Autorename sanely.
+setw -g automatic-rename on
+
+# Better name management
+bind c new-window
+bind , command-prompt "rename-window '%%'"
+
+# Copy mode
+setw -g mode-keys vi
+bind ` copy-mode
+unbind [
+unbind p
+bind p paste-buffer
+bind -t vi-copy H start-of-line
+bind -t vi-copy L end-of-line
+bind -t vi-copy v begin-selection
+bind -t vi-copy y copy-selection
+bind -t vi-copy Escape cancel
+bind y run "tmux save-buffer - | reattach-to-user-namespace pbcopy"

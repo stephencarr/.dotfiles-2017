@@ -1,0 +1,84 @@
+[user]
+  name = stephencarr
+  email = stephencarr@gmail.com
+[core]
+  autocrlf = input
+  whitespace = fix,space-before-tab,tab-in-indent,trailing-space
+  excludesfile = ~/.gitignore_global
+  editor = 'vim' --wait
+[apply]
+  whitespace = fix
+[alias]
+  a = add -p
+  br = branch
+  ci = commit
+  cia = commit --amend --no-edit
+  co = checkout
+  df = diff
+  g = grep -I
+  lf = log --pretty=format:'%Cred%h%Creset - %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  lg = log -p
+  pp = !"echo 'Pull'; git pull; echo 'Push'; git put"
+  put = push -u origin HEAD
+  putf = push -u origin HEAD --force-with-lease
+  rb = rbranch
+  rv = review
+  st = status
+  cleanup = "!git branch --merged | grep  -v '\\*\\|master\\|develop' | xargs -n 1 git branch -d"
+[branch "master"]
+  remote = origin
+  merge = refs/heads/master
+[color]
+  ui = auto
+  diff = auto
+  status = auto
+  branch = auto
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+[merge]
+  log = true
+[rerere]
+  enabled = 1
+[url "git@github.com:"]
+  insteadOf = "gh:"
+  pushInsteadOf = "github:"
+  pushInsteadOf = "git://github.com/"
+[url "git://github.com/"]
+  insteadOf = "github:"
+[url "git@gist.github.com:"]
+  insteadOf = "gst:"
+  pushInsteadOf = "gist:"
+  pushInsteadOf = "git://gist.github.com/"
+[url "git://gist.github.com/"]
+  insteadOf = "gist:"
+[url "git@heroku.com:"]
+  insteadOf = "heroku:"
+[push]
+  default = current
+[mergetool]
+  keepBackup = true
+[filter "lfs"]
+  clean = git-lfs clean %f
+  smudge = git-lfs smudge %f
+  required = true
+[hub]
+  protocol = https
+[user]
+  signingkey = E15CE7B9561F8802
+[gpg]
+  program = gpg2
+[commit]
+  gpgsign = true
+[credential]
+  helper = osxkeychain

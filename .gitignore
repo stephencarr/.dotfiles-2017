@@ -2,3 +2,4 @@
 .DS_Store
 .tmux/plugins/
 .tmux/resurrect
+.vim/plugged
